@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Expense Tracker</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f5f5f5;
+        padding: 20px;
+    }
+    h1 {
+        text-align: center;
+        color: #333;
+    }
+    .tracker {
+        max-width: 500px;
+        margin: 0 auto;
+        background: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    input, select, button {
+        width: 100%;
+        padding: 10px;
+        margin: 6px 0;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+    }
+    table {
+        width: 100%;
+        margin-top: 15px;
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
+        text-align: left;
+    }
+    th {
+        background: #eee;
+    }
+    .total {
+        text-align: right;
+        margin-top: 10px;
+        font-weight: bold;
+    }
+</style>
+</head>
+<body>
+<h1>Expense Tracker</h1>
+<div class="tracker">
+    <input type="date" id="date" required>
+    <input type="text" id="category" placeholder="Category" required>
+    <input type="text" id="description" placeholder="Description" required>
+    <input type="number" id="amount" placeholder="Amount" required>
+    <button onclick="addExpense()">Add Expense</button>
+
+    <table id="expenseTable">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Category</th>
+                <th>Description</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <div class="total" id="total">Total: 0</div>
+</div>
+
+<script>
+let expenses = [];
+
+function addExpense() {
+    const date = document.getElementById('date').value;
+    const category = document.getElementById('category').value;
+    const description = document.getElementById('description').value;
+    const amount = parseFloat(document.getElementById('amount').value);
+
+    if(!date || !category || !description || isNaN(amount)) {
+        alert("Please fill all fields correctly!");
+        return;
+    }
+
+    const expense = { date, category, description, amount };
+    expenses.push(expense);
+    renderTable();
+    clearInputs();
+}
+
+function renderTable() {
+    const tbody = document.querySelector('#expenseTable tbody');
+    tbody.innerHTML = "";
+    let total = 0;
+
+    expenses.forEach(exp => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${exp.date}</td>
+            <td>${exp.category}</td>
+            <td>${exp.description}</td>
+            <td>${exp.amount.toFixed(2)}</td>
+        `;
+        tbody.appendChild(row);
+        total += exp.amount;
+    });
+
+    document.getElementById('total').innerText = `Total: ${total.toFixed(2)}`;
+}
+
+function clearInputs() {
+    document.getElementById('date').value = "";
+    document.getElementById('category').value = "";
+    document.getElementById('description').value = "";
+    document.getElementById('amount').value = "";
+}
+</script>
+</body>
+</html>
